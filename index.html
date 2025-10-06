@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer - March 8th, 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .target-date {
+            color: #667eea;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .countdown-display {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #764ba2;
+            margin: 30px 0;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .unit-label {
+            font-size: 1.5rem;
+            color: #555;
+            margin-top: -10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button.active {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .countdown-display {
+                font-size: 3rem;
+            }
+
+            .target-date {
+                font-size: 1rem;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Countdown Timer</h1>
+        <div class="target-date">March 8th, 2026</div>
+        
+        <div class="countdown-display" id="countdown">
+            <span id="timeValue">0</span>
+        </div>
+        <div class="unit-label" id="unitLabel">Days</div>
+        
+        <div class="button-group">
+            <button id="btnSeconds" onclick="changeUnit('seconds')">Seconds</button>
+            <button id="btnMinutes" onclick="changeUnit('minutes')">Minutes</button>
+            <button id="btnHours" onclick="changeUnit('hours')">Hours</button>
+            <button id="btnDays" onclick="changeUnit('days')" class="active">Days</button>
+        </div>
+    </div>
+
+    <script>
+        // Target date: March 8th, 2026 at 00:00:00
+        const targetDate = new Date('2026-03-08T00:00:00').getTime();
+        let currentUnit = 'days';
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) {
+                document.getElementById('timeValue').textContent = '0';
+                return;
+            }
+
+            let value;
+            switch (currentUnit) {
+                case 'seconds':
+                    value = Math.floor(distance / 1000);
+                    break;
+                case 'minutes':
+                    value = Math.floor(distance / (1000 * 60));
+                    break;
+                case 'hours':
+                    value = Math.floor(distance / (1000 * 60 * 60));
+                    break;
+                case 'days':
+                    value = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    break;
+                default:
+                    value = 0;
+            }
+
+            document.getElementById('timeValue').textContent = value.toLocaleString();
+        }
+
+        function changeUnit(unit) {
+            currentUnit = unit;
+            
+            // Update active button
+            document.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn${unit.charAt(0).toUpperCase() + unit.slice(1)}`).classList.add('active');
+            
+            // Update unit label
+            document.getElementById('unitLabel').textContent = unit.charAt(0).toUpperCase() + unit.slice(1);
+            
+            // Update countdown immediately
+            updateCountdown();
+        }
+
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        
+        // Initial update
+        updateCountdown();
+    </script>
+</body>
+</html>
